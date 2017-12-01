@@ -1,8 +1,8 @@
 project_path: /web/tools/_project.yaml
 book_path: /web/tools/_book.yaml
-description: Get started with debugging JavaScript using Chrome DevTools in this interactive tutorial.
+description: Learn how to use Chrome DevTools to find and fix JavaScript bugs.
 
-{# wf_updated_on: 2017-03-30 #}
+{# wf_updated_on: 2017-12-01 #}
 {# wf_published_on: 2017-01-04 #}
 
 {% include "web/tools/chrome-devtools/_shared/styles.html" %}
@@ -11,24 +11,12 @@ description: Get started with debugging JavaScript using Chrome DevTools in this
 
 {% include "web/_shared/contributors/kaycebasques.html" %}
 
-This step-by-step, interactive tutorial teaches you the basic
-workflow for debugging JavaScript in Chrome DevTools. The tutorial shows you
-how to debug one specific issue, but the general workflow you learn is helpful
-for debugging all types of JavaScript bugs.
-
-If you're using `console.log()` to find and fix bugs in your code, consider
-using the workflow outlined in this tutorial instead. It's often much faster
-and more effective.
+This tutorial teaches you the basic workflow for debugging any JavaScript issue in DevTools.
 
 ## Step 1: Reproduce the bug {: #step-1 }
 
-Reproducing the bug is always the first step to debugging.
-To "reproduce the bug" means to find a series of actions that consistently
-causes the bug to appear. You may need to reproduce the bug many times,
-so try to eliminate any unnecessary steps.
-
-Follow along with the instructions below to reproduce the bug that you're going
-to fix in this tutorial.
+Finding a series of actions that consistently reproduces a bug is always to first step
+to debugging.
 
 1. Click **Open Demo**. The demo opens in a new tab.
 
@@ -38,60 +26,58 @@ to fix in this tutorial.
        <button>Open Demo</button>
      </a>
 
-1. On the demo, enter `5` for **Number 1**.
-1. Enter `1` for **Number 2**.
+1. Enter `5` in the **Number 1** text box.
+1. Enter `1` in the **Number 2** text box.
 1. Click **Add Number 1 and Number 2**.
-1. Look at the label below the inputs and button. It says `5 + 1 = 51`.
+1. Look at the label below the inputs and button. It says `5 + 1 = 51`. That result is
+   wrong. The result should be `6`. This is the bug you're going to fix.
 
-Whoops. That result is wrong. The result should be `6`. This is the bug that
-you're going to fix.
+## Step 2: Get familiar with DevTools
 
-{% framebox width="auto" height="auto" enable_widgets="true" %}
-<script>
-var label = 'JS / Get Started / (1) Reproduced The Bug';
-var url = 'https://github.com/google/webfundamentals/issues/new?title=[' +
-      label + ']';
-var feedback = {
-  "category": "DevTools",
-  "choices": [
-    {
-      "button": {
-        "text": "I reproduced the bug",
-        "primary": true
-      },
-      "response": "You're off to a good start!",
-      "analytics": {
-        "label": label
-      }
-    },
-    {
-      "button": {
-        "text": "I can't reproduce the bug"
-      },
-      "response": 'Sorry to hear that. Please <a href="' + url +
-          '" target="_blank">open an issue</a> and tell us what happened.',
-      "analytics": {
-        "label": label,
-        "value": 0
-      }
-    }
-  ]
-};
-</script>
-{% include "web/_shared/multichoice.html" %}
-{% endframebox %}
+The first time you see the DevTools UI, it can be overwhelming. This is because DevTools
+provides a lot of different tools for different tasks, such as changing CSS, profiling page
+load performance, and monitoring network requests. The **Sources** panel is where you debug
+JavaScript.
 
-## Step 2: Pause the code with a breakpoint
+1. Open DevTools on the demo by pressing <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>I</kbd> (Mac)
+   or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> (Windows, Linux). This shortcut opens
+   the **Console** panel.
 
-DevTools lets you pause your code in the middle of its execution, and
-examine the values of *all* variables at that moment in time. The tool for
-pausing your code is called a **breakpoint**. Try it now:
-
-1. Open DevTools on the demo by pressing
-   <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>I</kbd> (Mac) or
-   <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> (Windows, Linux).
+     <figure>
+       <img src="imgs/console.png" alt="The Console panel."/>
+       <figcaption>
+         <b>Figure X</b>. The <b>Console</b> panel
+       </figcaption>
+     </figure>
 
 1. Click the **Sources** tab.
+
+     <figure>
+       <img src="imgs/sources.png" alt="The Sources panel."/>
+       <figcaption>
+         <b>Figure X</b>. The <b>Sources</b> panel
+       </figcaption>
+     </figure>
+
+The **Sources** panel UI has 3 parts:
+
+<figure>
+  <img src="imgs/sources-annotated.png" alt="The 3 parts of the Sources panel UI."/>
+  <figcaption>
+    <b>Figure X</b>. The 3 parts of the <b>Sources</b> panel UI
+  </figcaption>
+</figure>
+
+1. The **File Navigator** pane. Every file that the page requests is listed here.
+2. The **Code Editor** pane. After selecting a file in the **File Navigator** pane, the contents
+   of that file are displayed here.
+3. The **JavaScript Debugging** pane. Various tools for inspecting the page's JavaScript. If
+   your DevTools window is wide, this pane is displayed to the right of the **Code Editor** pane.
+
+## Step X: Pause the code with a breakpoint
+
+With DevTools, you can pause your code in the middle of its execution and examine the values of
+variables at that moment in time. The tool for pausing your code is called a **breakpoint**.
 
 1. Click **Event Listener Breakpoints** to expand the section. DevTools reveals
    a list of expandable event categories, such as **Animation** and
@@ -106,9 +92,9 @@ pausing your code is called a **breakpoint**. Try it now:
      <figure>
        <img src="imgs/get-started-click-breakpoint.png"
          alt="DevTools opened on the demo, with the Sources panel in focus
-              and click event listener breakpoints enabled."
+              and click event listener breakpoints enabled."/>
        <figcaption>
-         <b>Figure 1</b>: DevTools opened on the demo, with the
+         <b>Figure X</b>: DevTools opened on the demo, with the
          Sources panel in focus and click event listener breakpoints enabled.
          If your DevTools window is large, the location of the <b>Event
          Listener Breakpoints</b> pane is on the right, rather than the
@@ -130,11 +116,9 @@ handler, DevTools automatically pauses on the first line of that node's
 Note: This is just one of the many types of breakpoints that DevTools offers.
 What breakpoint you should use depends on what type of issue you're debugging.
 
-{% include "web/tools/chrome-devtools/javascript/_feedback/2.html" %}
-
 [resume]: /web/tools/chrome-devtools/images/resume-script-execution.png
 
-## Step 3: Step through the code
+## Step X: Step through the code
 
 One common cause of bugs is when a script executes in the
 wrong order. Stepping through your code enables you to walk through your
@@ -160,12 +144,10 @@ That's the basic idea of stepping through code. If you look at the code in
 you can use another type of breakpoint to pause the code closer to the
 location of the bug.
 
-{% include "web/tools/chrome-devtools/javascript/_feedback/3.html" %}
-
 [into]: /web/tools/chrome-devtools/images/step-into.png
 [over]: /web/tools/chrome-devtools/images/step-over.png
 
-## Step 4: Set another breakpoint
+## Step X: Set another breakpoint
 
 Line-of-code breakpoints are the most common type of breakpoint. When
 you've got a specific line of code that you want to pause on, use a
@@ -188,9 +170,7 @@ line-of-code breakpoint. Try it now:
 The value of `sum` looks suspicious. It looks like it's being evaluated as
 a string, when it should be a number. This may be the cause of the bug.
 
-{% include "web/tools/chrome-devtools/javascript/_feedback/4.html" %}
-
-## Step 5: Check variable values
+## Step X: Check variable values
 
 Another common cause of bugs is when a variable or function produces
 a different value than expected. Many developers use `console.log()` to
@@ -212,9 +192,9 @@ can store any valid JavaScript expression in a Watch Expression. Try it now:
 
      <figure>
        <img src="imgs/get-started-watch-expression.png"
-         alt="The Watch Expression pane."
+         alt="The Watch Expression pane."/>
        <figcaption>
-         <b>Figure 1</b>: The Watch Expression pane (bottom-right), after
+         <b>Figure X</b>: The Watch Expression pane (bottom-right), after
          creating the <code>typeof sum</code> Watch Expression.
          If your DevTools window is large, the Watch Expression pane is on
          the right, above the <b>Event Listener Breakpoints</b> pane.
@@ -238,18 +218,16 @@ fixes for the bug you just discovered. Try it now:
 
      <figure>
        <img src="imgs/get-started-console.png"
-         alt="The Console drawer, after evaluating a statement."
+         alt="The Console drawer, after evaluating a statement."/>
        <figcaption>
-         <b>Figure 1</b>: The Console drawer, after evaluating
+         <b>Figure X</b>: The Console drawer, after evaluating
          <code>parseInt(addend1) + parseInt(addend2)</code>.
        </figcaption>
      </figure>
 
-{% include "web/tools/chrome-devtools/javascript/_feedback/5.html" %}
-
 [add]: /web/tools/chrome-devtools/javascript/imgs/add-expression.png
 
-## Step 6: Apply a fix
+## Step X: Apply a fix
 
 You've identified a potential fix for the bug. All that's left is to try out
 your fix by editing the code and re-running the demo. You don't
@@ -278,8 +256,6 @@ running in your browser. It won't fix the code for all users that run your
 page. To do that, you need to fix the code that's running on the servers
 that serve your page.
 
-{% include "web/tools/chrome-devtools/javascript/_feedback/6.html" %}
-
 [deactivate]: /web/tools/chrome-devtools/images/deactivate-breakpoints-button.png
 
 ## Next steps
@@ -307,11 +283,3 @@ tutorial. Check out the link below to learn more about them.
    data-category="DevTools / Debug JS / Get Started / Next Steps / Breakpoints"
    href="reference#stepping" target="_blank"
    rel="noopener noreferrer"><button>I Want To Master Code Stepping</button></a>
-
-## Feedback
-
-Help us make this tutorial better by answering the questions below.
-
-{% include "web/tools/chrome-devtools/javascript/_feedback/7.html" %}
-
-{% include "web/tools/chrome-devtools/javascript/_feedback/8.html" %}
