@@ -15,7 +15,7 @@ This tutorial teaches you the basic workflow for debugging any JavaScript issue 
 
 ## Step 1: Reproduce the bug {: #reproduce }
 
-Finding a series of actions that consistently reproduces a bug is always to first step
+Finding a series of actions that consistently reproduces a bug is always the first step
 to debugging.
 
 1. Click **Open Demo**. The demo opens in a new tab.
@@ -40,7 +40,7 @@ to debugging.
        </figcaption>
      </figure>
 
-## Step 2: Get familiar with the Sources panel UI {: #sources }
+## Step 2: Get familiar with the Sources panel UI {: #sources-ui }
 
 DevTools provides a lot of different tools for different tasks, such as changing CSS, profiling
 page load performance, and monitoring network requests. The **Sources** panel is where you debug
@@ -84,7 +84,7 @@ The **Sources** panel UI has 3 parts:
 ## Step X: Pause the code with a breakpoint {: #event-breakpoint }
 
 A common method for debugging a problem like this is to insert a lot of `console.log()`
-statements into the code, to inspect values as the script executes. For example:
+statements into the code, in order to inspect values as the script executes. For example:
 
 <pre class="prettyprint">function updateLabel() {
   var addend1 = getNumber1();
@@ -116,9 +116,9 @@ associated to the **Add Number 1 and Number 2** button. Therefore, you probably 
 the code around the time that the `click` listener executes. **Event Listener Breakpoints**
 let you do exactly that:
 
-1. Click **Event Listener Breakpoints** to expand the section. DevTools reveals
-   a list of expandable event categories, such as **Animation** and
-   **Clipboard**. See Figure X for the location of the **Event Listener Breakpoints** section.
+1. In the **JavaScript Debugging** pane, click **Event Listener Breakpoints** to expand the
+   section. DevTools reveals a list of expandable event categories, such as **Animation** and
+   **Clipboard**.
 1. Next to the **Mouse** event category, click **Expand** ![Expand
    icon](/web/tools/chrome-devtools/images/expand.png){: .devtools-inline}.
    DevTools reveals a list of mouse events, such as **click** and **mousedown**. Each event has
@@ -149,8 +149,8 @@ let you do exactly that:
        **Note**: If you paused on a different line, you have a browser extension that
        registers a `click` event listener on every page that you visit. You were paused in the
        extension's `click` listener. If you use Incognito Mode to [browse in
-       private][incognito], you can confirm that the workflow this tutorial describes always
-       pauses on the correct line of code.
+       private][incognito], which disables all extensions, you can see that you pause on the
+       correct line of code every time.
      </aside>
 
 [incognito]: https://support.google.com/chrome/answer/95464
@@ -158,7 +158,7 @@ let you do exactly that:
 **Event Listener Breakpoints** are just one of many types of breakpoints available in DevTools.
 It's worth memorizing all the different types, because each type ultimately helps you debug
 different scenarios as quickly as possible. See [Pause Your Code With Breakpoints][breakpoints]
-to learn when to use each type.
+to learn when and how to use each type.
 
 [resume]: /web/tools/chrome-devtools/images/resume-script-execution.png
 [breakpoints]: /web/tools/chrome-devtools/javascript/breakpoints
@@ -198,34 +198,53 @@ Line-of-code breakpoints are the most common type of breakpoint. When
 you've got a specific line of code that you want to pause on, use a
 line-of-code breakpoint. Try it now:
 
-1. Look at the last line of code in `updateLabel()`, which looks like this:
+1. Look at the last line of code in `updateLabel()`:
 
-       `label.textContent = addend1 + ' + ' + addend2 + ' = ' + sum;`
+     <pre class="prettyprint">label.textContent = addend1 + ' + ' + addend2 + ' = ' + sum;</pre>
 
-1. To the left of this code, you can see the line number of this particular
-   line of code: **32**. Click on **32**. DevTools puts a blue icon on top
+1. To the left of the code you can see the line number of this particular
+   line of code, which is **32**. Click on **32**. DevTools puts a blue icon on top
    of **32**. This means that there is a line-of-code breakpoint on this line.
    DevTools now always pauses before this line of code is executed.
 1. Click **Resume script execution** ![Resume script
    execution][resume]{:.devtools-inline}. The script continues executing
-   until it reaches the line of code you placed the breakpoint on.
-1. Look at the lines of code in `updateLabel()` that have already executed.
-   DevTools prints out the values of `addend1`, `addend2`, and `sum`.
+   until it reaches line 32.
 
-The value of `sum` looks suspicious. It looks like it's being evaluated as
-a string, when it should be a number. This may be the cause of the bug.
+     <figure>
+       <img src="imgs/line-of-code-breakpoint.png"
+         alt="DevTools pauses on the line-of-code breakpoint on line 32."/>
+       <figcaption>
+         <b>Figure X</b>. DevTools pauses on the line-of-code breakpoint on line 32
+       </figcaption>
+     </figure>
+
+1. Look at lines 29, 30, and 31. DevTools prints out the values of `addend1`, `addend2`,
+   and `sum` to the right of each line's semi-colon.
 
 ## Step X: Check variable values {: #check-values }
 
-Another common cause of bugs is when a variable or function produces
-a different value than expected. Many developers use `console.log()` to
-see how values change over time, but `console.log()` can be tedious and
-ineffective for two reasons. One, you may need to manually edit your code
-with lots of calls to `console.log()`. Two, you may not know exactly which
-variable is related to the bug, so you may need to log out many variables.
+The values of `addend1`, `addend2`, and `sum` look suspicious. They're wrapped in quotes, which
+means that they're strings. This may be the cause of the bug. DevTools provides a lot of tools
+for experimenting with this hypothesis.
 
-One DevTools alternative to `console.log()` is Watch Expressions. Use
-Watch Expressions to monitor the value of variables over time.
+### Method 1: The Scope pane {: #scope }
+
+When you're paused on a line of code, the **Scope** pane shows you what local and global variables
+are currently defined, along with the value of each variable. It also shows closure variables,
+when applicable. Double-click a variable value to edit it. When you're not paused on a line of
+code, the **Scope** pane is empty.
+
+<figure>
+  <img src="imgs/scope-pane.png"
+    alt="The Scope pane."/>
+  <figcaption>
+    <b>Figure X</b>. The <b>Scope</b> pane
+  </figcaption>
+</figure>
+
+### Method 2: Watch Expressions {: #watch-expressions }
+
+**Watch Expressions** let you monitor the values of variables over time.
 As the name implies, Watch Expressions aren't just limited to variables. You
 can store any valid JavaScript expression in a Watch Expression. Try it now:
 
@@ -247,23 +266,24 @@ can store any valid JavaScript expression in a Watch Expression. Try it now:
      </figure>
 
 As suspected, `sum` is being evaluated as a string, when it should be a
-number. This is the cause of the demo's bug.
+number. You've now confirmed that this is the cause of the bug.
 
-A second DevTools alternative to `console.log()` is the Console. Use the
-Console to evaluate arbitrary JavaScript statements.
-Developers commonly use the Console to overwrite the variable values
-when debugging. In your case, the Console can help you test out potential
-fixes for the bug you just discovered. Try it now:
+### Method 3: The Console {: #console }
+
+In addition to viewing `console.log()` messages, you can also use the Console to evaluate
+arbitrary JavaScript statements. In terms of debugging, you can use the Console to test out
+potential fixes for bugs. Try it now:
 
 1. If you don't have the Console drawer open, press <kbd>Escape</kbd> to open
    it. It opens at the bottom of your DevTools window.
-1. In the Console, type `parseInt(addend1) + parseInt(addend2)`.
+1. In the Console, type `parseInt(addend1) + parseInt(addend2)`. This statement works because you
+   are paused on a line of code where `addend1` and `addend2` are in scope.
 1. Press <kbd>Enter</kbd>. DevTools evaluates the statement and prints out
    `6`, which is the result you expect the demo to produce.
 
      <figure>
        <img src="imgs/get-started-console.png"
-         alt="The Console drawer, after evaluating a statement."/>
+         alt="The Console drawer, after evaluating parseInt(addend1) + parseInt(addend2)."/>
        <figcaption>
          <b>Figure X</b>. The Console drawer, after evaluating
          <code>parseInt(addend1) + parseInt(addend2)</code>.
@@ -274,32 +294,27 @@ fixes for the bug you just discovered. Try it now:
 
 ## Step X: Apply a fix {: #apply-fix }
 
-You've identified a potential fix for the bug. All that's left is to try out
+You've found a fix for the bug. All that's left is to try out
 your fix by editing the code and re-running the demo. You don't
 need to leave DevTools to apply the fix. You can edit JavaScript code directly
 within the DevTools UI. Try it now:
 
-1. In the code editor on the **Sources** panel of DevTools, replace
-   `var sum = addend1 + addend2` with
-   `var sum = parseInt(addend1) + parseInt(addend2);`. This is one line
-   above where you are currently paused.
-1. Press <kbd>Command</kbd>+<kbd>S</kbd> (Mac) or
-   <kbd>Control</kbd>+<kbd>S</kbd> (Windows, Linux) to save your change.
-   The background of the code changes to red to indicate that the script has
-   been changed within DevTools.
-1. Click **Deactivate breakpoints** ![Deactivate
-   breakpoints][deactivate]{:.devtools-inline}. It changes blue to indicate
-   that it is active. While this is set, DevTools ignores any breakpoints
-   you've set.
 1. Click **Resume script execution** ![Resume script
    execution][resume]{:.devtools-inline}.
+1. In the **Code Editor**, replace line 31 (`var sum = addend1 + addend2`) with
+   `var sum = parseInt(addend1) + parseInt(addend2)`.
+1. Press <kbd>Command</kbd>+<kbd>S</kbd> (Mac) or
+   <kbd>Control</kbd>+<kbd>S</kbd> (Windows, Linux) to save your change.
+1. Click **Deactivate breakpoints** ![Deactivate
+   breakpoints][deactivate]{:.devtools-inline}. It changes blue to indicate
+   that it's active. While this is set, DevTools ignores any breakpoints
+   you've set.
 1. Try out the demo with different values. The demo should now be calculating
    the sums correctly.
 
-Keep in mind that this workflow only applies a fix to the code that is
-running in your browser. It won't fix the code for all users that run your
-page. To do that, you need to fix the code that's running on the servers
-that serve your page.
+Caution: This workflow only applies a fix to the code that is running in your browser.
+It won't fix the code for all users that visit your page. To do that, you need to fix the
+code that's on your servers.
 
 [deactivate]: /web/tools/chrome-devtools/images/deactivate-breakpoints-button.png
 
