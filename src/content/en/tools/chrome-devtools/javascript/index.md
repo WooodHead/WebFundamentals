@@ -320,7 +320,8 @@ code that's on your servers.
 
 ## Next steps {: #next-steps }
 
-Congratulations! You now know the basics of debugging JavaScript in DevTools.
+Congratulations! You now know how to make the most of Chrome DevTools when debugging
+JavaScript. The tools and methods you learned in this tutorial can save you countless hours.
 
 This tutorial only showed you two ways to set breakpoints. DevTools offers many
 other ways, including:
@@ -331,15 +332,8 @@ other ways, including:
 * XHR breakpoints that are triggered when the requested URL matches a
   substring that you provide.
 
-<a class="gc-analytics-event"
-   data-category="DevTools / Debug JS / Get Started / Next Steps / Breakpoints"
-   href="breakpoints" target="_blank"
-   rel="noopener noreferrer"><button>Show Me All The Breakpoints</button></a>
+See [Pause Your Code With Breakpoints](/web/tools/chrome-devtools/javascript/breakpoints) to
+learn when and how to use each type.
 
-There's a couple of code stepping controls that weren't explained in this
-tutorial. Check out the link below to learn more about them.
-
-<a class="gc-analytics-event"
-   data-category="DevTools / Debug JS / Get Started / Next Steps / Breakpoints"
-   href="reference#stepping" target="_blank"
-   rel="noopener noreferrer"><button>I Want To Master Code Stepping</button></a>
+There's a couple of code stepping controls that weren't explained in this tutorial. See [Step
+over line of code](/web/tools/chrome-devtools/javascript/reference#stepping) to learn more.
