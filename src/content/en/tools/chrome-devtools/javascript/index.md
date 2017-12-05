@@ -13,7 +13,7 @@ description: Learn how to use Chrome DevTools to find and fix JavaScript bugs.
 
 This tutorial teaches you the basic workflow for debugging any JavaScript issue in DevTools.
 
-## Step 1: Reproduce the bug {: #step-1 }
+## Step 1: Reproduce the bug {: #reproduce }
 
 Finding a series of actions that consistently reproduces a bug is always to first step
 to debugging.
@@ -30,13 +30,20 @@ to debugging.
 1. Enter `1` in the **Number 2** text box.
 1. Click **Add Number 1 and Number 2**.
 1. Look at the label below the inputs and button. It says `5 + 1 = 51`. That result is
-   wrong. The result should be `6`. This is the bug you're going to fix.
+   wrong. It should be `6`. This is the bug you're going to fix.
 
-## Step 2: Get familiar with DevTools
+     <figure>
+       <img src="imgs/bug.png"
+         alt="The result of 5 + 1 is 51. It should be 6."/>
+       <figcaption>
+         <b>Figure X</b>. The result of 5 + 1 is 51. It should be 6.
+       </figcaption>
+     </figure>
 
-The first time you see the DevTools UI, it can be overwhelming. This is because DevTools
-provides a lot of different tools for different tasks, such as changing CSS, profiling page
-load performance, and monitoring network requests. The **Sources** panel is where you debug
+## Step 2: Get familiar with the Sources panel UI {: #sources }
+
+DevTools provides a lot of different tools for different tasks, such as changing CSS, profiling
+page load performance, and monitoring network requests. The **Sources** panel is where you debug
 JavaScript.
 
 1. Open DevTools on the demo by pressing <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>I</kbd> (Mac)
@@ -74,51 +81,89 @@ The **Sources** panel UI has 3 parts:
 3. The **JavaScript Debugging** pane. Various tools for inspecting the page's JavaScript. If
    your DevTools window is wide, this pane is displayed to the right of the **Code Editor** pane.
 
-## Step X: Pause the code with a breakpoint
+## Step X: Pause the code with a breakpoint {: #event-breakpoint }
 
-With DevTools, you can pause your code in the middle of its execution and examine the values of
-variables at that moment in time. The tool for pausing your code is called a **breakpoint**.
+A common method for debugging a problem like this is to insert a lot of `console.log()`
+statements into the code, to inspect values as the script executes. For example:
+
+<pre class="prettyprint">function updateLabel() {
+  var addend1 = getNumber1();
+  <strong>console.log('addend1:', addend1);</strong>
+  var addend2 = getNumber2();
+  <strong>console.log('addend2:', addend2);</strong>
+  var sum = addend1 + addend2;
+  <strong>console.log('sum:', sum);</strong>
+  label.textContent = addend1 + ' + ' + addend2 + ' = ' + sum;
+}</pre>
+
+The `console.log()` method may get the job done, but **breakpoints** can get it done faster.
+A breakpoint lets you pause your code in the middle of its execution, and examine all values
+at that moment in time. Breakpoints have a few advantages over the `console.log()` method:
+
+* With `console.log()`, you need to manually open the source code, find the relevant code,
+  insert the `console.log()` statements, and then reload the page in order to see the messages
+  in the Console. With breakpoints, you can pause on the relevant code without even knowing how
+  the code is structured.
+* In your `console.log()` statements you need to explicitly specify each value that you want
+  to inspect. With breakpoints, DevTools shows you the values of all variables at that moment
+  in time. Sometimes there are variables affecting your code that you're not even aware of.
+
+In short, breakpoints can help you find and fix bugs faster than the `console.log()` method.
+
+If you take a step back and think about how the app works, you can make an educated guess
+that the incorrect sum (`5 + 1 = 51`) gets computed in the `click` event listener that's
+associated to the **Add Number 1 and Number 2** button. Therefore, you probably want to pause
+the code around the time that the `click` listener executes. **Event Listener Breakpoints**
+let you do exactly that:
 
 1. Click **Event Listener Breakpoints** to expand the section. DevTools reveals
    a list of expandable event categories, such as **Animation** and
-   **Clipboard**.
-
+   **Clipboard**. See Figure X for the location of the **Event Listener Breakpoints** section.
 1. Next to the **Mouse** event category, click **Expand** ![Expand
    icon](/web/tools/chrome-devtools/images/expand.png){: .devtools-inline}.
-   DevTools reveals a list of mouse events, such as **click**,
-   with checkboxes next to them.
-1. Check the **click** checkbox.
+   DevTools reveals a list of mouse events, such as **click** and **mousedown**. Each event has
+   a checkbox next to it.
+1. Check the **click** checkbox. DevTools is now set up to automatically pause when *any*
+   `click` event listener executes.
+
 
      <figure>
        <img src="imgs/get-started-click-breakpoint.png"
-         alt="DevTools opened on the demo, with the Sources panel in focus
-              and click event listener breakpoints enabled."/>
+         alt="The click checkbox is enabled."/>
        <figcaption>
-         <b>Figure X</b>: DevTools opened on the demo, with the
-         Sources panel in focus and click event listener breakpoints enabled.
-         If your DevTools window is large, the location of the <b>Event
-         Listener Breakpoints</b> pane is on the right, rather than the
-         bottom-left, like in the screenshot.
+         <b>Figure X</b>. The <b>click</b> checkbox is enabled
        </figcaption>
      </figure>
 
+   
 1. Back on the demo, click **Add Number 1 and Number 2** again. DevTools
    pauses the demo and highlights a line of code in the **Sources** panel.
-   DevTools highlights this line of code:
+   DevTools should be paused on this line of code:
 
-       `function onClick() {`
+     <pre class="prettyprint">function onClick() {</pre>
 
-When you checked the **click** checkbox, you set up an event-based breakpoint on
-all `click` events. When *any* node is clicked, and that node has a `click`
-handler, DevTools automatically pauses on the first line of that node's
-`click` handler.
+1. If you're paused on a different line of code, press **Resume Script Execution** ![Resume
+   Script Execution][resume]{:.cdt-inl} until you're paused on the correct line.
 
-Note: This is just one of the many types of breakpoints that DevTools offers.
-What breakpoint you should use depends on what type of issue you're debugging.
+     <aside class="note">
+       **Note**: If you paused on a different line, you have a browser extension that
+       registers a `click` event listener on every page that you visit. You were paused in the
+       extension's `click` listener. If you use Incognito Mode to [browse in
+       private][incognito], you can confirm that the workflow this tutorial describes always
+       pauses on the correct line of code.
+     </aside>
+
+[incognito]: https://support.google.com/chrome/answer/95464
+
+**Event Listener Breakpoints** are just one of many types of breakpoints available in DevTools.
+It's worth memorizing all the different types, because each type ultimately helps you debug
+different scenarios as quickly as possible. See [Pause Your Code With Breakpoints][breakpoints]
+to learn when to use each type.
 
 [resume]: /web/tools/chrome-devtools/images/resume-script-execution.png
+[breakpoints]: /web/tools/chrome-devtools/javascript/breakpoints
 
-## Step X: Step through the code
+## Step X: Step through the code {: #code-stepping }
 
 One common cause of bugs is when a script executes in the
 wrong order. Stepping through your code enables you to walk through your
@@ -147,7 +192,7 @@ location of the bug.
 [into]: /web/tools/chrome-devtools/images/step-into.png
 [over]: /web/tools/chrome-devtools/images/step-over.png
 
-## Step X: Set another breakpoint
+## Step X: Set a line-of-code breakpoint {: #line-breakpoint }
 
 Line-of-code breakpoints are the most common type of breakpoint. When
 you've got a specific line of code that you want to pause on, use a
@@ -170,7 +215,7 @@ line-of-code breakpoint. Try it now:
 The value of `sum` looks suspicious. It looks like it's being evaluated as
 a string, when it should be a number. This may be the cause of the bug.
 
-## Step X: Check variable values
+## Step X: Check variable values {: #check-values }
 
 Another common cause of bugs is when a variable or function produces
 a different value than expected. Many developers use `console.log()` to
@@ -194,7 +239,7 @@ can store any valid JavaScript expression in a Watch Expression. Try it now:
        <img src="imgs/get-started-watch-expression.png"
          alt="The Watch Expression pane."/>
        <figcaption>
-         <b>Figure X</b>: The Watch Expression pane (bottom-right), after
+         <b>Figure X</b>. The Watch Expression pane (bottom-right), after
          creating the <code>typeof sum</code> Watch Expression.
          If your DevTools window is large, the Watch Expression pane is on
          the right, above the <b>Event Listener Breakpoints</b> pane.
@@ -220,14 +265,14 @@ fixes for the bug you just discovered. Try it now:
        <img src="imgs/get-started-console.png"
          alt="The Console drawer, after evaluating a statement."/>
        <figcaption>
-         <b>Figure X</b>: The Console drawer, after evaluating
+         <b>Figure X</b>. The Console drawer, after evaluating
          <code>parseInt(addend1) + parseInt(addend2)</code>.
        </figcaption>
      </figure>
 
 [add]: /web/tools/chrome-devtools/javascript/imgs/add-expression.png
 
-## Step X: Apply a fix
+## Step X: Apply a fix {: #apply-fix }
 
 You've identified a potential fix for the bug. All that's left is to try out
 your fix by editing the code and re-running the demo. You don't
@@ -258,7 +303,7 @@ that serve your page.
 
 [deactivate]: /web/tools/chrome-devtools/images/deactivate-breakpoints-button.png
 
-## Next steps
+## Next steps {: #next-steps }
 
 Congratulations! You now know the basics of debugging JavaScript in DevTools.
 
